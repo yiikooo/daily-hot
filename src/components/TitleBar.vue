@@ -15,13 +15,13 @@
         <p class="lunar-date">{{ currentLunarDate }}</p>
       </div>
       <div class="buttons">
-        <button class="icon-button">
+        <button class="icon-button" @click="refreshPage">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" viewBox="0 0 512 512">
             <path
               d="M436.7 74.7L448 85.4 448 32c0-17.7 14.3-32 32-32s32 14.3 32 32l0 128c0 17.7-14.3 32-32 32l-128 0c-17.7 0-32-14.3-32-32s14.3-32 32-32l47.9 0-7.6-7.2c-.2-.2-.4-.4-.6-.6-75-75-196.5-75-271.5 0s-75 196.5 0 271.5 196.5 75 271.5 0c8.2-8.2 15.5-16.9 21.9-26.1 10.1-14.5 30.1-18 44.6-7.9s18 30.1 7.9 44.6c-8.5 12.2-18.2 23.8-29.1 34.7-100 100-262.1 100-362 0S-25 175 75 75c99.9-99.9 261.7-100 361.7-.3z" />
           </svg>
         </button>
-        <button class="icon-button">
+        <button class="icon-button" @click="toggleTheme">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" viewBox="0 0 576 512">
             <path
               d="M178.2-10.1c7.4-3.1 15.8-2.2 22.5 2.2l87.8 58.2 87.8-58.2c6.7-4.4 15.1-5.2 22.5-2.2S411.4-.5 413 7.3l20.9 103.2 103.2 20.9c7.8 1.6 14.4 7 17.4 14.3s2.2 15.8-2.2 22.5l-58.2 87.8 58.2 87.8c4.4 6.7 5.2 15.1 2.2 22.5s-9.6 12.8-17.4 14.3L433.8 401.4 413 504.7c-1.6 7.8-7 14.4-14.3 17.4s-15.8 2.2-22.5-2.2l-87.8-58.2-87.8 58.2c-6.7 4.4-15.1 5.2-22.5 2.2s-12.8-9.6-14.3-17.4L143 401.4 39.7 380.5c-7.8-1.6-14.4-7-17.4-14.3s-2.2-15.8 2.2-22.5L82.7 256 24.5 168.2c-4.4-6.7-5.2-15.1-2.2-22.5s9.6-12.8 17.4-14.3L143 110.6 163.9 7.3c1.6-7.8 7-14.4 14.3-17.4zM207.6 256a80.4 80.4 0 1 1 160.8 0 80.4 80.4 0 1 1 -160.8 0zm208.8 0a128.4 128.4 0 1 0 -256.8 0 128.4 128.4 0 1 0 256.8 0z" />
@@ -86,6 +86,19 @@ onUnmounted(() => {
     clearInterval(timer);
   }
 });
+
+const refreshPage = () => {
+  window.location.reload();
+};
+
+const toggleTheme = () => {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  if (isDark) {
+    document.documentElement.removeAttribute('data-theme');
+  } else {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+};
 </script>
 <style scoped>
 .title-bar {
@@ -94,20 +107,20 @@ onUnmounted(() => {
   align-items: center;
   padding: 0px 45px;
   padding-top: 25px;
-  background-color: var(--title-bar-bg);
+  background-color: var(--bg);
   color: var(--text-color);
   width: 100%;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 1000;
-  transition: all 0.2s ease-in-out;
   border-bottom: var(--border) solid 0px;
 }
 
 .title-bar.shrink {
   padding: 10px 30px;
   border-bottom: var(--border) solid 1px;
+  background-color: var(--title-bar-bg);
 }
 
 .left-section {

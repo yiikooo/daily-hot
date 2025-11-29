@@ -6,6 +6,7 @@
   margin: 0;
   box-sizing: border-box;
   user-select: none;
+  transition: all 0.2s ease-in-out;
 }
 body {
   font-family: 'HarmonyOS_Regular', sans-serif;
