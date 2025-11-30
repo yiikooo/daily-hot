@@ -3,6 +3,7 @@
     <div class="app-header">
       <img :src="`app-icon${apiUrl}.png`" alt="App Icon" class="app-icon" />
       <h2 class="app-name">{{ appName }}</h2>
+      <div v-if="formattedUpdateTime" class="update-time">{{ formattedUpdateTime }}</div>
     </div>
     <div class="app-content-wrapper">
       <div v-if="loading" class="loading-indicator">加载中...</div>
@@ -26,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 
 interface HotSearchItem {
   id: string;
@@ -63,6 +64,7 @@ const hotSearchData = ref<HotSearchItem[]>([]);
 const loading = ref(true);
 const error = ref<Error | null>(null);
 const api = 'https://hot.api.yik.at';
+const updateTime = ref<string | null>(null);
 
 const fetchHotSearchData = async () => {
   try {
@@ -73,6 +75,7 @@ const fetchHotSearchData = async () => {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data: ApiResponse = await response.json();
+    updateTime.value = data.updateTime;
     // 根据热度进行排序
     hotSearchData.value = data.data;
     // hotSearchData.value = data.data.sort((a, b) => b.hot - a.hot);
@@ -86,6 +89,18 @@ const fetchHotSearchData = async () => {
     loading.value = false;
   }
 };
+
+const formattedUpdateTime = computed(() => {
+  if (!updateTime.value) return '';
+  console.log(updateTime.value);
+
+  const date = new Date(updateTime.value);
+  // const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  // const day = date.getDate().toString().padStart(2, '0');
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  return `${hours}:${minutes}`;
+});
 
 onMounted(() => {
   fetchHotSearchData();
@@ -130,6 +145,18 @@ const formatHot = (hot: number): string => {
   z-index: 1;
   position: sticky; /* 固定标题 */
   top: 0;
+  position: relative; /* 允许绝对定位子元素 */
+}
+
+.update-time {
+  position: absolute; /* 绝对定位 */
+  top: 0px; /* 调整位置 */
+  right: 0px; /* 调整位置 */
+  font-size: 12px;
+  color: var(--secondary-text-color);
+  background-color: var(--title-bar-bg); /* 背景颜色与卡片头部一致 */
+  padding: 2px 8px;
+  border-radius: 0 8px 0 8px; /* 圆角与卡片顶部圆角匹配 */
 }
 
 .app-content-wrapper {
